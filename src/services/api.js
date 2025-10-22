@@ -31,7 +31,6 @@ export const loginUser = async (email, password) => {
     }
 };
 
-// --- ADD THIS NEW FUNCTION ---
 // Function to get posts for the admin dashboard
 export const getAdminPosts = async (status) => {
     try {
@@ -39,6 +38,17 @@ export const getAdminPosts = async (status) => {
         const response = await api.get("/admin/posts", {
             params: { status }, // e.g., /api/admin/posts?status=publish
         });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+// Function to delete (thrash) a post
+export const deletePost = async (id) => {
+    try {
+        // The interceptor will add the token
+        const response = await api.delete(`/posts/${id}`);
         return response.data;
     } catch (error) {
         throw error.response.data;

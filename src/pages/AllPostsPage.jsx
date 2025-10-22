@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAdminPosts } from "../services/api"; // <-- IMPORT
+import { getAdminPosts, deletePost } from "../services/api"; // <-- IMPORT
 
 const TABS = ["Published", "Draft", "Trashed"];
 
@@ -29,6 +29,32 @@ function AllPostsPage() {
 
         fetchPosts();
     }, [activeTab]); // Dependency array: re-run the effect when activeTab changes
+
+    // Handler for thrashing a post
+    const handleThrash = async (postId, postTitle) => {
+        // Add a confirmation dialog as a safety net
+        if (
+            !window.confirm(
+                `Are you sure you want to thrash the post "${postTitle}"?`
+            )
+        ) {
+            return;
+        }
+
+        try {
+            await deletePost(postId);
+
+            // On success, update the UI instantly by removing the post from state.
+            // This is called an "optimistic update" and feels fast.
+            setPosts((prevPosts) =>
+                prevPosts.filter((post) => post.ID !== postId)
+            );
+
+            // You could also show a success notification here
+        } catch (err) {
+            setError(err.message || "Failed to thrash post.");
+        }
+    };
 
     return (
         <div>
@@ -100,12 +126,21 @@ function AllPostsPage() {
                                                 >
                                                     Edit
                                                 </a>
-                                                <a
-                                                    href="#"
-                                                    className="text-red-600 hover:text-red-900"
-                                                >
-                                                    Thrash
-                                                </a>
+
+                                                {/* Only show the "Thrash" button if the post is NOT already trashed. We pass the post ID and title to the handler. */}
+                                                {activeTab !== "Trashed" && (
+                                                    <button
+                                                        onClick={() =>
+                                                            handleThrash(
+                                                                post.ID,
+                                                                post.title
+                                                            )
+                                                        }
+                                                        className="text-red-600 hover:text-red-900"
+                                                    >
+                                                        Thrash
+                                                    </button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))
