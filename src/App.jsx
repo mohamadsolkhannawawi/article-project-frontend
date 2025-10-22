@@ -8,6 +8,8 @@ import PublicLayout from "./layouts/PublicLayout";
 
 // Admin Pages
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 import AllPostsPage from "./pages/AllPostsPage";
 import AddNewPostPage from "./pages/AddNewPostPage";
 import EditPostPage from "./pages/EditPostPage";
@@ -39,10 +41,24 @@ function App() {
                     }
                 />
 
+                {/* /register : Public page for creating a new user */}
+                <Route
+                    path="/register"
+                    element={
+                        isAuthenticated ? (
+                            <Navigate to="/admin" replace />
+                        ) : (
+                            <RegisterPage />
+                        )
+                    }
+                />
+
                 {/* /admin/* : All admin routes are protected and use AdminLayout */}
                 <Route path="/admin" element={<ProtectedRoute />}>
                     <Route element={<AdminLayout />}>
-                        <Route index element={<AllPostsPage />} />
+                        {/* The /admin path now renders its own dashboard page */}
+                        <Route index element={<AdminDashboardPage />} />
+                        <Route path="posts" element={<AllPostsPage />} />
                         <Route path="posts/new" element={<AddNewPostPage />} />
                         <Route
                             path="posts/edit/:id"
