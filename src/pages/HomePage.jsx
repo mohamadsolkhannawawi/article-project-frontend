@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getPosts } from "../services/api"; // We use getPosts (public), NOT getAdminPosts
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 // Small component for a post card
 const PostCard = ({ post }) => (
@@ -26,10 +27,15 @@ const PostCard = ({ post }) => (
     </Link>
 );
 
+const LIMIT = 9;
+
 function HomePage() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -37,8 +43,9 @@ function HomePage() {
             setError("");
             try {
                 // getPosts will only return 'published' posts
-                const response = await getPosts();
+                const response = await getPosts(LIMIT, offset);
                 setPosts(response.data || []);
+                setTotal(response.meta.total || 0);
             } catch (err) {
                 setError(err.message || "Failed to fetch posts.");
             } finally {
@@ -46,7 +53,12 @@ function HomePage() {
             }
         };
         fetchPosts();
-    }, []);
+    }, [offset]); // Re-run when offset changes
+
+    // Handler for when a page number is clicked
+    const handlePageChange = (newOffset) => {
+        setOffset(newOffset);
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -68,18 +80,26 @@ function HomePage() {
             {error && <p className="text-red-500">Error: {error}</p>}
 
             {!loading && !error && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                    {posts.length > 0 ? (
-                        posts.map((post) => (
-                            <PostCard key={post.ID} post={post} />
-                        ))
-                    ) : (
-                        <p>No published articles found.</p>
-                    )}
-                </div>
-            )}
+                <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        {posts.length > 0 ? (
+                            posts.map((post) => (
+                                <PostCard key={post.ID} post={post} />
+                            ))
+                        ) : (
+                            <p>No published articles found.</p>
+                        )}
+                    </div>
 
-            {/* Pagination will be added here later */}
+                    {/* 5. Add the Pagination component to the JSX */}
+                    <Pagination
+                        total={total}
+                        limit={LIMIT}
+                        offset={offset}
+                        onPageChange={handlePageChange}
+                    />
+                </>
+            )}
         </div>
     );
 }

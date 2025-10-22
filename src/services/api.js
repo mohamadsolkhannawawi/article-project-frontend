@@ -32,11 +32,11 @@ export const loginUser = async (email, password) => {
 };
 
 // Function to get posts for the admin dashboard
-export const getAdminPosts = async (status) => {
+export const getAdminPosts = async (status, limit = 10, offset = 0) => {
     try {
         // We don't need to add the token here, the interceptor does it for us!
         const response = await api.get("/admin/posts", {
-            params: { status }, // e.g., /api/admin/posts?status=publish
+            params: { status, limit, offset }, // e.g., /api/admin/posts?status=publish
         });
         return response.data;
     } catch (error) {

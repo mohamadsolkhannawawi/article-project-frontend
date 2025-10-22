@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { getAdminPosts, deletePost } from "../services/api"; // <-- IMPORT
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 const TABS = ["Published", "Draft", "Trashed"];
+const LIMIT = 10;
 
 function AllPostsPage() {
     const [activeTab, setActiveTab] = useState(TABS[0]);
     const [posts, setPosts] = useState([]);
+
+    const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -18,8 +24,10 @@ function AllPostsPage() {
             try {
                 // Convert tab name to lowercase for the API (e.g., "Published" -> "publish")
                 const status = activeTab.toLowerCase();
-                const response = await getAdminPosts(status);
+                // Pass limit and offset to the API call
+                const response = await getAdminPosts(status, LIMIT, offset);
                 setPosts(response.data || []);
+                setTotal(response.meta.total || 0); // Save the total count
             } catch (err) {
                 setError(err.message || "Failed to fetch posts.");
                 setPosts([]);
@@ -29,7 +37,17 @@ function AllPostsPage() {
         };
 
         fetchPosts();
-    }, [activeTab]); // Dependency array: re-run the effect when activeTab changes
+    }, [activeTab, offset]); // Dependency array: re-run the effect when activeTab changes, or offset changes
+
+    // Handler for when a page number is clicked
+    const handlePageChange = (newOffset) => {
+        setOffset(newOffset);
+    };
+
+    // Reset offset when tab changes
+    useEffect(() => {
+        setOffset(0);
+    }, [activeTab]);
 
     // Handler for thrashing a post
     const handleThrash = async (postId, postTitle) => {
@@ -161,6 +179,16 @@ function AllPostsPage() {
                             </tbody>
                         </table>
                     </div>
+                )}
+
+                {/* Pagination Controls */}
+                {!loading && !error && total > 0 && (
+                    <Pagination
+                        total={total}
+                        limit={LIMIT}
+                        offset={offset}
+                        onPageChange={handlePageChange}
+                    />
                 )}
             </div>
         </div>
