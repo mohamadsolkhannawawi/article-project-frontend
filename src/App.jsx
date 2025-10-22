@@ -2,8 +2,10 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
+import AdminLayout from "./layouts/AdminLayout";
+import AllPostsPage from "./pages/AllPostsPage";
 import DashboardPage from "./pages/DashboardPage";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import the gatekeeper
+import ProtectedRoute from "./routes/ProtectedRoute"; // Import the gatekeeper
 import "./index.css";
 
 function App() {
@@ -27,20 +29,19 @@ function App() {
                         )
                     }
                 />
-
-                {/*
-          Protected Routes: / (Dashboard)
-          We wrap these routes in our <ProtectedRoute /> component.
-        */}
+                {/* Protected Admin Routes */}
                 <Route path="/" element={<ProtectedRoute />}>
-                    {/* The <Outlet /> in ProtectedRoute will render this 'index' route */}
-                    <Route index element={<DashboardPage />} />
-
-                    {/* We will add other admin routes here later:
-            <Route path="posts" element={<AllPostsPage />} />
-            <Route path="posts/new" element={<AddNewPostPage />} />
-            <Route path="posts/edit/:id" element={<EditPostPage />} />
-          */}
+                    <Route element={<AdminLayout />}>
+                        {" "}
+                        {/* <-- WRAP WITH LAYOUT */}
+                        <Route index element={<AllPostsPage />} />{" "}
+                        {/* <-- USE NEW PAGE */}
+                        <Route
+                            path="posts/new"
+                            element={<div>Add New Post Page</div>}
+                        />
+                        {/* ... other admin routes ... */}
+                    </Route>
                 </Route>
 
                 {/* Fallback route for 404 Not Found */}
