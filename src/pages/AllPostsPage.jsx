@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAdminPosts, deletePost } from "../services/api"; // <-- IMPORT
+import { Link } from "react-router-dom";
 
 const TABS = ["Published", "Draft", "Trashed"];
 
@@ -60,9 +61,12 @@ function AllPostsPage() {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">All Posts</h1>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <Link
+                    to="/posts/new"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
                     Add New
-                </button>
+                </Link>
             </div>
 
             {/* Tab Navigation */}

@@ -55,4 +55,32 @@ export const deletePost = async (id) => {
     }
 };
 
+// Function to upload an image file
+export const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file); // 'image' must match the key in the backend handler
+
+    try {
+        const response = await api.post("/upload", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data; // Returns { status, message, data: { url } }
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+// Function to create a new post
+export const createPost = async (postData) => {
+    try {
+        // postData should be an object: { title, content, category, status, tags, featured_image_url }
+        const response = await api.post("/posts", postData);
+        return response.data; // Returns the new post object
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
 export default api;
