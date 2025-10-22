@@ -1,31 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getPosts } from "../services/api"; // We use getPosts (public), NOT getAdminPosts
-import { Link } from "react-router-dom";
+import PostCard from "../components/PostCard";
 import Pagination from "../components/Pagination";
-
-// Small component for a post card
-const PostCard = ({ post }) => (
-    <Link to={`/blog/${post.ID}`} className="block group">
-        <div className="overflow-hidden rounded-lg">
-            <img
-                src={
-                    post.featured_image_url ||
-                    "https://via.placeholder.com/400x250"
-                }
-                alt={post.title}
-                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-        </div>
-        <div className="mt-4">
-            <p className="text-sm font-medium text-blue-600">{post.category}</p>
-            <h3 className="text-xl font-semibold text-gray-900 mt-2 group-hover:text-blue-600">
-                {post.title}
-            </h3>
-            <p className="text-sm text-gray-500 mt-2">Nov 20, 2024</p>{" "}
-            {/* We will replace this with post.created_at later */}
-        </div>
-    </Link>
-);
+import { ArrowDown, ArrowRight } from "lucide-react";
 
 const LIMIT = 9;
 
@@ -45,7 +22,7 @@ function HomePage() {
                 // getPosts will only return 'published' posts
                 const response = await getPosts(LIMIT, offset);
                 setPosts(response.data || []);
-                setTotal(response.meta.total || 0);
+                setTotal(response.meta?.total || 0);
             } catch (err) {
                 setError(err.message || "Failed to fetch posts.");
             } finally {
@@ -61,45 +38,72 @@ function HomePage() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            {/* Hero Section (from design) */}
-            <div className="text-center bg-blue-700 text-white p-16 rounded-lg mb-16">
-                <h1 className="text-5xl font-bold">
-                    Stay Updated On Digital Payment
-                </h1>
-                <p className="text-xl mt-4 max-w-2xl mx-auto">
-                    Get the latest insights and trends in digital payments, all
-                    in one place.
-                </p>
+        <div>
+            {/* Hero Section - KataGenzi Brand Identity (Full-width, soft gradient) */}
+            <div className="mb-16 overflow-hidden">
+                {" "}
+                {/* The gradient now fades to transparent, blending into the gray background from PublicLayout */}
+                <div className="relative bg-gradient-to-b from-purple-100 via-purple-50 to-transparent text-gray-900 pt-48 pb-32 px-6 md:px-12">
+                    <div className="max-w-3xl mx-auto text-center">
+                        <h1 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-gray-900">
+                            KataGenzi: Delivering Ideas, One Word at a Time.
+                        </h1>
+                        <p className="mt-6 text-lg md:text-xl font-light leading-relaxed text-gray-700">
+                            A clean, minimalist platform for thoughtful articles
+                            shared by our community.
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                            <a
+                                href="#articles" // Link to the articles section below
+                                className="inline-flex items-center gap-2 bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200 shadow-lg"
+                            >
+                                Explore Articles
+                                <ArrowDown size={18} />
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* All Articles Section */}
-            <h2 className="text-3xl font-bold mb-8">All Articles</h2>
+            {/* This div now only provides vertical spacing, background comes from PublicLayout */}
+            <div className="py-16">
+                <h2
+                    id="articles"
+                    className="text-3xl font-bold mb-8 scroll-mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+                >
+                    All Articles
+                </h2>
 
-            {loading && <p>Loading articles...</p>}
-            {error && <p className="text-red-500">Error: {error}</p>}
+                {loading && <p className="text-center">Loading articles...</p>}
+                {error && (
+                    <p className="text-center text-red-600">Error: {error}</p>
+                )}
 
-            {!loading && !error && (
-                <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                        {posts.length > 0 ? (
-                            posts.map((post) => (
-                                <PostCard key={post.ID} post={post} />
-                            ))
-                        ) : (
-                            <p>No published articles found.</p>
+                {!loading && !error && (
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            {posts.length > 0 ? (
+                                posts.map((post) => (
+                                    <PostCard key={post.ID} post={post} />
+                                ))
+                            ) : (
+                                <p className="col-span-full text-center text-gray-500">
+                                    No published articles found.
+                                </p>
+                            )}
+                        </div>
+
+                        {total > LIMIT && (
+                            <Pagination
+                                total={total}
+                                limit={LIMIT}
+                                offset={offset}
+                                onPageChange={handlePageChange}
+                            />
                         )}
-                    </div>
-
-                    {/* 5. Add the Pagination component to the JSX */}
-                    <Pagination
-                        total={total}
-                        limit={LIMIT}
-                        offset={offset}
-                        onPageChange={handlePageChange}
-                    />
-                </>
-            )}
+                    </>
+                )}
+            </div>
         </div>
     );
 }

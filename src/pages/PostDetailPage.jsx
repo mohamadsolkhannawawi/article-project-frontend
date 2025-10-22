@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getPostByID } from "../services/api";
+import { getPostByID, getPosts } from "../services/api";
 import ReactMarkdown from "react-markdown"; // We use this to render markdown content
+import Sidebar from "../components/Sidebar";
+import { Calendar, User } from "lucide-react";
 
 // This function formats the date
 const formatDate = (isoString) => {
@@ -17,6 +19,7 @@ function PostDetailPage() {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [latest, setLatest] = useState([]);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -25,6 +28,10 @@ function PostDetailPage() {
             try {
                 const response = await getPostByID(id);
                 setPost(response.data);
+
+                // Fetch latest posts for the sidebar
+                const resLatest = await getPosts(5, 0);
+                setLatest(resLatest.data || []);
             } catch (err) {
                 setError(err.message || "Failed to fetch post.");
             } finally {
@@ -41,7 +48,7 @@ function PostDetailPage() {
     if (error) {
         return (
             <div className="text-center p-10 text-red-500">Error: {error}</div>
-        );
+        ); // Keep red-500 for errors
     }
 
     if (!post) {
@@ -49,15 +56,15 @@ function PostDetailPage() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
             <div className="lg:grid lg:grid-cols-3 lg:gap-12">
                 {/* Main Content (2/3 width) */}
                 <div className="lg:col-span-2">
                     {/* Breadcrumbs */}
-                    <nav className="text-sm mb-4">
+                    <nav className="text-sm mb-6">
                         <Link
                             to="/blog"
-                            className="text-blue-600 hover:underline"
+                            className="text-purple-600 hover:underline"
                         >
                             Blog
                         </Link>
@@ -65,18 +72,21 @@ function PostDetailPage() {
                         <span className="text-gray-500">{post.title}</span>
                     </nav>
 
-                    {/* Title */}
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                    {/* Title and Meta */}
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
                         {post.title}
                     </h1>
 
+                    {/* Author and Date Info */}
                     {/* Author Info */}
-                    <div className="flex items-center space-x-2 mb-6">
-                        <span className="font-medium">
+                    <div className="flex items-center space-x-2 mb-6 text-sm text-gray-600">
+                        <span className="font-medium flex items-center gap-1">
+                            <User size={16} className="text-purple-500" />
                             {post.author?.full_name || "Anonymous"}
                         </span>
                         <span className="text-gray-400">•</span>
-                        <span className="text-gray-500">
+                        <span className="flex items-center gap-1">
+                            <Calendar size={16} className="text-purple-500" />
                             {formatDate(post.CreatedAt)}
                         </span>
                     </div>
@@ -85,53 +95,22 @@ function PostDetailPage() {
                     <img
                         src={
                             post.featured_image_url ||
-                            "https://via.placeholder.com/800x450"
+                            "https://via.placeholder.com/800x450?text=KataGenzi"
                         }
                         alt={post.title}
-                        className="w-full h-auto object-cover rounded-lg mb-8"
+                        className="w-full h-auto object-cover rounded-xl mb-8 shadow-lg"
                     />
 
                     {/* Markdown Content */}
-                    <div className="prose lg:prose-lg max-w-none">
+                    <article className="prose prose-purple lg:prose-xl max-w-none">
                         <ReactMarkdown>{post.content}</ReactMarkdown>
-                    </div>
+                    </article>
                 </div>
 
                 {/* Sidebar (1/3 width) */}
                 <aside className="mt-12 lg:mt-0">
-                    <div className="sticky top-8 bg-gray-50 p-6 rounded-lg">
-                        <h3 className="text-lg font-semibold mb-4">
-                            Latest Posts
-                        </h3>
-                        {/* We can add a fetch for latest posts here later */}
-                        <ul className="space-y-3">
-                            <li>
-                                <a href="#" className="hover:text-blue-600">
-                                    Post 1...
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-blue-600">
-                                    Post 2...
-                                </a>
-                            </li>
-                        </ul>
-
-                        <h3 className="text-lg font-semibold mt-8 mb-4">
-                            Categories
-                        </h3>
-                        <ul className="space-y-3">
-                            <li>
-                                <a href="#" className="hover:text-blue-600">
-                                    Technology
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:text-blue-600">
-                                    Finance
-                                </a>
-                            </li>
-                        </ul>
+                    <div className="sticky top-8">
+                        <Sidebar latest={latest} categories={[]} tags={[]} />
                     </div>
                 </aside>
             </div>
