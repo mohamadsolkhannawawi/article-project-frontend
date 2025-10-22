@@ -83,4 +83,25 @@ export const createPost = async (postData) => {
     }
 };
 
+// Function to get a single post by its ID (this is a public endpoint)
+export const getPostByID = async (id) => {
+    try {
+        const response = await api.get(`/posts/${id}`);
+        return response.data; // Returns { status, message, data: { post } }
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+// Function to update an existing post
+export const updatePost = async (id, postData) => {
+    try {
+        // The interceptor will add the token
+        const response = await api.put(`/posts/${id}`, postData);
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
 export default api;

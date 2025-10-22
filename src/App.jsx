@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import AdminLayout from "./layouts/AdminLayout";
 import AllPostsPage from "./pages/AllPostsPage";
 import AddNewPostPage from "./pages/AddNewPostPage";
+import EditPostPage from './pages/EditPostPage';
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./routes/ProtectedRoute"; // Import the gatekeeper
 import "./index.css";
@@ -37,6 +38,7 @@ function App() {
                         <Route index element={<AllPostsPage />} />
                         {/* <-- USE NEW PAGE */}
                         <Route path="posts/new" element={<AddNewPostPage />} />
+                        <Route path="posts/edit/:id" element={<EditPostPage />} />
                         {/* ... other admin routes ... */}
                     </Route>
                 </Route>

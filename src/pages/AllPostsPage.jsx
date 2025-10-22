@@ -124,12 +124,12 @@ function AllPostsPage() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a
-                                                    href="#"
+                                                <Link
+                                                    to={`/posts/edit/${post.ID}`}
                                                     className="text-indigo-600 hover:text-indigo-900 mr-4"
                                                 >
                                                     Edit
-                                                </a>
+                                                </Link>
 
                                                 {/* Only show the "Thrash" button if the post is NOT already trashed. We pass the post ID and title to the handler. */}
                                                 {activeTab !== "Trashed" && (
