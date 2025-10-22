@@ -44,6 +44,22 @@ export const getAdminPosts = async (status) => {
     }
 };
 
+// Function to get all public, published posts (for the homepage)
+export const getPosts = async (limit = 10, offset = 0) => {
+    try {
+        // This calls the public GET /api/posts endpoint
+        const response = await api.get("/posts", {
+            params: {
+                limit,
+                offset,
+            },
+        });
+        return response.data; // Returns { status, message, data: [posts], meta: {...} }
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
 // Function to delete (thrash) a post
 export const deletePost = async (id) => {
     try {

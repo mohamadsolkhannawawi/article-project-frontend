@@ -1,13 +1,23 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import LoginPage from "./pages/LoginPage";
+
+// Layouts
 import AdminLayout from "./layouts/AdminLayout";
+import PublicLayout from "./layouts/PublicLayout";
+
+// Admin Pages
+import LoginPage from "./pages/LoginPage";
 import AllPostsPage from "./pages/AllPostsPage";
 import AddNewPostPage from "./pages/AddNewPostPage";
-import EditPostPage from './pages/EditPostPage';
-import DashboardPage from "./pages/DashboardPage";
-import ProtectedRoute from "./routes/ProtectedRoute"; // Import the gatekeeper
+import EditPostPage from "./pages/EditPostPage";
+
+// Public Pages
+import HomePage from "./pages/HomePage";
+// We will create PostDetailPage soon
+// import PostDetailPage from './pages/PostDetailPage';
+
+import ProtectedRoute from "./routes/ProtectedRoute";
 import "./index.css";
 
 function App() {
@@ -16,34 +26,44 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/*
-                  Public Route: /login
-                  If the user is already authenticated, redirect them to the dashboard.
-                  Otherwise, show the LoginPage.
-                */}
+                {/* --- ADMIN ROUTES --- */}
+
+                {/* /login : Public page for logging in */}
                 <Route
                     path="/login"
                     element={
                         isAuthenticated ? (
-                            <Navigate to="/" replace />
+                            <Navigate to="/admin" replace />
                         ) : (
                             <LoginPage />
                         )
                     }
                 />
-                {/* Protected Admin Routes */}
-                <Route path="/" element={<ProtectedRoute />}>
+
+                {/* /admin/* : All admin routes are protected and use AdminLayout */}
+                <Route path="/admin" element={<ProtectedRoute />}>
                     <Route element={<AdminLayout />}>
-                        {/* <-- WRAP WITH LAYOUT */}
                         <Route index element={<AllPostsPage />} />
-                        {/* <-- USE NEW PAGE */}
                         <Route path="posts/new" element={<AddNewPostPage />} />
-                        <Route path="posts/edit/:id" element={<EditPostPage />} />
-                        {/* ... other admin routes ... */}
+                        <Route
+                            path="posts/edit/:id"
+                            element={<EditPostPage />}
+                        />
                     </Route>
                 </Route>
 
-                {/* Fallback route for 404 Not Found */}
+                {/* --- PUBLIC BLOG ROUTES --- */}
+
+                {/* /* : All public routes use PublicLayout */}
+                <Route path="/" element={<PublicLayout />}>
+                    {/* Redirect the root "/" path to "/blog" */}
+                    <Route index element={<Navigate to="/blog" replace />} />
+                    <Route path="blog" element={<HomePage />} />
+                    {/* This route is ready for our next step */}
+                    {/* <Route path="blog/:id" element={<PostDetailPage />} /> */}
+                </Route>
+
+                {/* Fallback 404 route */}
                 <Route path="*" element={<div>404 - Page Not Found</div>} />
             </Routes>
         </BrowserRouter>
