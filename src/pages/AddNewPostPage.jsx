@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { uploadImage, createPost } from "../services/api";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
+import { Plus, Save } from "lucide-react";
 
 function AddNewPostPage() {
     const [title, setTitle] = useState("");
@@ -75,7 +76,7 @@ function AddNewPostPage() {
         try {
             await createPost(postData);
             // On success, navigate back to the main posts list
-            navigate("/");
+            navigate("/admin/posts");
         } catch (err) {
             // Handle validation errors from the backend
             if (err.error) {
@@ -89,7 +90,9 @@ function AddNewPostPage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">Add New Post</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">
+                Add New Post
+            </h1>
 
             {error && (
                 <div
@@ -100,11 +103,11 @@ function AddNewPostPage() {
                 </div>
             )}
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg shadow-md">
                 {/* Title */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="title"
                     >
                         Title
@@ -114,31 +117,34 @@ function AddNewPostPage() {
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                        placeholder="Your Post Title"
+                        className="shadow-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full"
+                        placeholder="Enter post title"
                     />
                 </div>
 
-                {/* Content */}
+                {/* Content (Markdown Editor) */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="content"
                     >
                         Content
                     </label>
-
                     <SimpleMDE
                         id="content"
                         value={content}
                         onChange={onContentChange}
+                        options={{
+                            spellChecker: false,
+                            placeholder: "Write your post content here...",
+                        }}
                     />
                 </div>
 
                 {/* Featured Image */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="image"
                     >
                         Featured Image
@@ -147,17 +153,24 @@ function AddNewPostPage() {
                         id="image"
                         type="file"
                         onChange={handleFileChange}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        className="block w-full text-sm text-gray-700
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-md file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-purple-50 file:text-purple-700
+                            hover:file:bg-purple-100"
                     />
                 </div>
                 {uploading && (
-                    <p className="text-blue-500">Uploading image...</p>
+                    <p className="text-blue-500 text-sm mb-4">
+                        Uploading image...
+                    </p>
                 )}
 
                 {/* Category */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="category"
                     >
                         Category
@@ -167,15 +180,15 @@ function AddNewPostPage() {
                         type="text"
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                        placeholder="e.g., Technology"
+                        className="shadow-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full"
+                        placeholder="e.g., Technology, Lifestyle"
                     />
                 </div>
 
                 {/* Tags */}
                 <div className="mb-6">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="tags"
                     >
                         Tags (comma-separated)
@@ -185,8 +198,8 @@ function AddNewPostPage() {
                         type="text"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                        placeholder="e.g., react, go, tutorial"
+                        className="shadow-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full"
+                        placeholder="e.g., react, javascript, frontend"
                     />
                 </div>
 
@@ -194,17 +207,19 @@ function AddNewPostPage() {
                 <div className="flex items-center space-x-4">
                     <button
                         onClick={() => handleSubmit("publish")}
-                        disabled={loading}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+                        disabled={loading || uploading}
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? "Saving..." : "Publish"}
+                        <Plus size={18} />{" "}
+                        {loading ? "Publishing..." : "Publish Post"}
                     </button>
                     <button
                         onClick={() => handleSubmit("draft")}
-                        disabled={loading}
-                        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+                        disabled={loading || uploading}
+                        className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? "Saving..." : "Save Draft"}
+                        <Save size={18} />{" "}
+                        {loading ? "Saving..." : "Save as Draft"}
                     </button>
                 </div>
             </div>

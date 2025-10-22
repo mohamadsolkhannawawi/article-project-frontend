@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getPostByID, updatePost, uploadImage } from "../services/api";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
+import { Save, Upload } from "lucide-react"; // Import Lucide icons
 
 function EditPostPage() {
     // Get the 'id' from the URL (e.g., /posts/edit/abc-123)
@@ -94,7 +95,7 @@ function EditPostPage() {
         // --- 2c: Call Update API ---
         try {
             await updatePost(id, postData);
-            navigate("/"); // Go back to the dashboard on success
+            navigate("/admin/posts"); // Go back to the posts list on success
         } catch (err) {
             setError(err.message || "Failed to update post.");
             setLoading(false);
@@ -105,10 +106,10 @@ function EditPostPage() {
     if (loading && !title) {
         return <div>Loading post data...</div>;
     }
-
+    // Use consistent styling for error messages
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">Edit Post</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Post</h1>
 
             {error && (
                 <div
@@ -119,28 +120,28 @@ function EditPostPage() {
                 </div>
             )}
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg shadow-md">
                 {/* Title */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="title"
                     >
                         Title
                     </label>
                     <input
                         id="title"
-                        type="text"
+                        type="text" // Apply consistent form input styling
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        className="shadow-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full"
                     />
                 </div>
 
                 {/* Content (Markdown Editor) */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="content"
                     >
                         Content
@@ -149,67 +150,78 @@ function EditPostPage() {
                         id="content"
                         value={content}
                         onChange={onContentChange}
+                        options={{
+                            // Add placeholder for better UX
+                            placeholder: "Write your post content here...",
+                        }}
                     />
                 </div>
 
                 {/* Featured Image */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="image"
                     >
                         Featured Image
                     </label>
                     <input
                         id="image"
-                        type="file"
+                        type="file" // Apply consistent file input styling
                         onChange={handleFileChange}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        className="block w-full text-sm text-gray-700
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-md file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-purple-50 file:text-purple-700
+                            hover:file:bg-purple-100"
                     />
                     {/* Show the existing image */}
                     {existingImageUrl && (
                         <img
                             src={existingImageUrl}
                             alt="Current featured"
-                            className="w-32 h-32 object-cover mt-2"
+                            className="w-32 h-32 object-cover mt-2 rounded-md"
                         />
                     )}
                 </div>
                 {uploading && (
-                    <p className="text-blue-500">Uploading new image...</p>
+                    <p className="text-blue-500 text-sm mb-4">
+                        Uploading new image...
+                    </p>
                 )}
 
                 {/* Category */}
                 <div className="mb-4">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="category"
                     >
                         Category
                     </label>
                     <input
                         id="category"
-                        type="text"
+                        type="text" // Apply consistent form input styling
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        className="shadow-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full"
                     />
                 </div>
 
                 {/* Tags */}
                 <div className="mb-6">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="tags"
                     >
                         Tags (comma-separated)
                     </label>
                     <input
                         id="tags"
-                        type="text"
+                        type="text" // Apply consistent form input styling
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        className="shadow-sm border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full"
                     />
                 </div>
 
@@ -218,15 +230,17 @@ function EditPostPage() {
                     <button
                         onClick={() => handleSubmit("publish")}
                         disabled={loading || uploading}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
+                        <Upload size={18} />{" "}
                         {loading ? "Updating..." : "Update & Publish"}
                     </button>
                     <button
                         onClick={() => handleSubmit("draft")}
                         disabled={loading || uploading}
-                        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+                        className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
+                        <Save size={18} />{" "}
                         {loading ? "Updating..." : "Update Draft"}
                     </button>
                 </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getAdminPosts, deletePost } from "../services/api"; // <-- IMPORT
+import { getMyAllPosts, deletePost } from "../services/api"; // <-- IMPORT getMyAllPosts for user's posts
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import { Plus, Edit, Trash2 } from "lucide-react"; // Import Lucide icons
 
 const TABS = ["Published", "Draft", "Trashed"];
 const LIMIT = 10;
@@ -18,25 +19,31 @@ function AllPostsPage() {
 
     // This effect will run when the component mounts and when activeTab changes
     useEffect(() => {
-        const fetchPosts = async () => {
+        const fetchMyPosts = async () => {
             setLoading(true);
             setError("");
             try {
-                // Convert tab name to lowercase for the API (e.g., "Published" -> "publish")
-                const status = activeTab.toLowerCase();
-                // Pass limit and offset to the API call
-                const response = await getAdminPosts(status, LIMIT, offset);
+                // Map tab names to status values
+                const statusMap = {
+                    Published: "publish",
+                    Draft: "draft",
+                    Trashed: "trash",
+                };
+                const status = statusMap[activeTab];
+
+                // Fetch posts by authenticated user with status filter
+                const response = await getMyAllPosts(LIMIT, offset, status);
                 setPosts(response.data || []);
                 setTotal(response.meta.total || 0); // Save the total count
             } catch (err) {
-                setError(err.message || "Failed to fetch posts.");
+                setError(err.message || "Failed to fetch your posts.");
                 setPosts([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPosts();
+        fetchMyPosts();
     }, [activeTab, offset]); // Dependency array: re-run the effect when activeTab changes, or offset changes
 
     // Handler for when a page number is clicked
@@ -63,27 +70,41 @@ function AllPostsPage() {
         try {
             await deletePost(postId);
 
-            // On success, update the UI instantly by removing the post from state.
-            // This is called an "optimistic update" and feels fast.
+            // On success, remove from current tab view
             setPosts((prevPosts) =>
                 prevPosts.filter((post) => post.ID !== postId)
             );
 
+            // Re-fetch posts from the same tab to ensure data is in sync
+            setLoading(true);
+            const statusMap = {
+                Published: "publish",
+                Draft: "draft",
+                Trashed: "trash",
+            };
+            const status = statusMap[activeTab];
+            const response = await getMyAllPosts(LIMIT, offset, status);
+            setPosts(response.data || []);
+            setTotal(response.meta.total || 0);
+            setLoading(false);
+
             // You could also show a success notification here
         } catch (err) {
             setError(err.message || "Failed to thrash post.");
+            setLoading(false);
         }
     };
 
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">All Posts</h1>
+                <h1 className="text-3xl font-bold text-gray-900">All Posts</h1>
                 <Link
-                    to="/posts/new"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    to="/admin/posts/new"
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200"
                 >
                     Add New
+                    <Plus size={18} />
                 </Link>
             </div>
 
@@ -95,8 +116,8 @@ function AllPostsPage() {
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`${
-                                activeTab === tab
-                                    ? "border-blue-500 text-blue-600"
+                                activeTab === tab // Use purple for active tab
+                                    ? "border-purple-500 text-purple-600"
                                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                             } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
                         >
@@ -108,7 +129,7 @@ function AllPostsPage() {
 
             {/* Content for the active tab */}
             <div>
-                {loading && <p>Loading posts...</p>}
+                {loading && <p className="text-gray-700">Loading posts...</p>}
                 {error && <p className="text-red-500">Error: {error}</p>}
 
                 {!loading && !error && (
@@ -138,18 +159,20 @@ function AllPostsPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                    {post.category}
+                                                    {post.category ||
+                                                        "Uncategorized"}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <Link
-                                                    to={`/posts/edit/${post.ID}`}
-                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                    to={`/admin/posts/edit/${post.ID}`}
+                                                    className="text-purple-600 hover:text-purple-800 mr-4 inline-flex items-center gap-1"
                                                 >
-                                                    Edit
+                                                    <Edit size={16} /> Edit
                                                 </Link>
 
                                                 {/* Only show the "Thrash" button if the post is NOT already trashed. We pass the post ID and title to the handler. */}
+                                                {/* Use red for thrash button */}
                                                 {activeTab !== "Trashed" && (
                                                     <button
                                                         onClick={() =>
@@ -158,8 +181,9 @@ function AllPostsPage() {
                                                                 post.title
                                                             )
                                                         }
-                                                        className="text-red-600 hover:text-red-900"
+                                                        className="text-red-600 hover:text-red-800 inline-flex items-center gap-1"
                                                     >
+                                                        <Trash2 size={16} />{" "}
                                                         Thrash
                                                     </button>
                                                 )}
