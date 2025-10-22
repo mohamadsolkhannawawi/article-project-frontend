@@ -1,26 +1,28 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
     // useState hooks to manage form inputs
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (event) => {
-        event.preventDefault(); // Prevent default form submission
+    // Get login function and loading state from our context
+    const { login, loading } = useAuth();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
         setError("");
-        setLoading(true);
 
-        console.log("Attempting to log in with:", { email, password });
+        const result = await login(email, password);
 
-        // --- API call will go here in the next step ---
-        // For now, let's simulate a delay
-        setTimeout(() => {
-            setLoading(false);
-            // Simulate an error for demonstration
-            setError("API integration is not implemented yet.");
-        }, 1000);
+        if (!result.success) {
+            setError(result.error || "Invalid credentials. Please try again.");
+        } else {
+            // On successful login, the AuthContext now holds the token.
+            // We will handle redirecting the user in the next step with routing.
+            console.log("Login successful! Token is stored.");
+        }
     };
 
     return (
