@@ -31,6 +31,20 @@ export const loginUser = async (email, password) => {
     }
 };
 
+// Function to register a new user (public)
+export const registerUser = async (fullName, email, password) => {
+    try {
+        const response = await api.post("/register", {
+            full_name: fullName,
+            email,
+            password,
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error;
+    }
+};
+
 // Function to get posts for the admin dashboard
 export const getAdminPosts = async (status, limit = 10, offset = 0) => {
     try {
@@ -104,6 +118,46 @@ export const getPostByID = async (id) => {
     try {
         const response = await api.get(`/posts/${id}`);
         return response.data; // Returns { status, message, data: { post } }
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+// Function to get published posts by authenticated user (for admin dashboard)
+export const getMyPublishedPosts = async (limit = 10, offset = 0) => {
+    try {
+        // The interceptor will add the token
+        const response = await api.get("/posts/my", {
+            params: {
+                published: true,
+                limit,
+                offset,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+// Function to get all posts by authenticated user with optional status filter (for admin all posts page)
+export const getMyAllPosts = async (limit = 10, offset = 0, status = null) => {
+    try {
+        // The interceptor will add the token
+        const params = {
+            limit,
+            offset,
+        };
+
+        // Add status parameter if provided
+        if (status) {
+            params.status = status;
+        }
+
+        const response = await api.get("/posts/my", {
+            params,
+        });
+        return response.data;
     } catch (error) {
         throw error.response.data;
     }
