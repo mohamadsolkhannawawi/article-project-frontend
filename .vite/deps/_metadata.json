@@ -1,37 +1,43 @@
 {
-  "hash": "902cf1ca",
+  "hash": "3dd58abf",
   "configHash": "d92f9a22",
-  "lockfileHash": "b9aed949",
-  "browserHash": "2ce51e67",
+  "lockfileHash": "01c1807e",
+  "browserHash": "78352706",
   "optimized": {
     "react": {
       "src": "../../node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "47a56036",
+      "fileHash": "87983378",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "a73a324a",
+      "fileHash": "1551c1bb",
       "needsInterop": true
     },
     "axios": {
       "src": "../../node_modules/axios/index.js",
       "file": "axios.js",
-      "fileHash": "9c92c0b9",
+      "fileHash": "376602bd",
       "needsInterop": false
     },
     "react-router-dom": {
       "src": "../../node_modules/react-router-dom/dist/index.mjs",
       "file": "react-router-dom.js",
-      "fileHash": "b3b042b7",
+      "fileHash": "31bf900f",
       "needsInterop": false
     },
     "react-simplemde-editor": {
       "src": "../../node_modules/react-simplemde-editor/dist/SimpleMdeReact.mjs",
       "file": "react-simplemde-editor.js",
-      "fileHash": "191666fd",
+      "fileHash": "4503cf6e",
+      "needsInterop": false
+    },
+    "react-markdown": {
+      "src": "../../node_modules/react-markdown/index.js",
+      "file": "react-markdown.js",
+      "fileHash": "dd009f26",
       "needsInterop": false
     }
   },

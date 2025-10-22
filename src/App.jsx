@@ -14,8 +14,7 @@ import EditPostPage from "./pages/EditPostPage";
 
 // Public Pages
 import HomePage from "./pages/HomePage";
-// We will create PostDetailPage soon
-// import PostDetailPage from './pages/PostDetailPage';
+import PostDetailPage from "./pages/PostDetailPage";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import "./index.css";
@@ -59,6 +58,7 @@ function App() {
                     {/* Redirect the root "/" path to "/blog" */}
                     <Route index element={<Navigate to="/blog" replace />} />
                     <Route path="blog" element={<HomePage />} />
+                    <Route path="blog/:id" element={<PostDetailPage />} />
                     {/* This route is ready for our next step */}
                     {/* <Route path="blog/:id" element={<PostDetailPage />} /> */}
                 </Route>
