@@ -1,9 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAdminPosts } from "../services/api"; // <-- IMPORT
 
-const TABS = ["Published", "Drafts", "Trashed"];
+const TABS = ["Published", "Draft", "Trashed"];
 
 function AllPostsPage() {
     const [activeTab, setActiveTab] = useState(TABS[0]);
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    // This effect will run when the component mounts and when activeTab changes
+    useEffect(() => {
+        const fetchPosts = async () => {
+            setLoading(true);
+            setError("");
+            try {
+                // Convert tab name to lowercase for the API (e.g., "Published" -> "publish")
+                const status = activeTab.toLowerCase();
+                const response = await getAdminPosts(status);
+                setPosts(response.data || []);
+            } catch (err) {
+                setError(err.message || "Failed to fetch posts.");
+                setPosts([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPosts();
+    }, [activeTab]); // Dependency array: re-run the effect when activeTab changes
 
     return (
         <div>
@@ -33,15 +58,71 @@ function AllPostsPage() {
                 </nav>
             </div>
 
-            {/* Content for the active tab will go here */}
+            {/* Content for the active tab */}
             <div>
-                <h2 className="text-xl font-semibold mb-4">
-                    Showing: {activeTab}
-                </h2>
-                <p>
-                    Data table for {activeTab.toLowerCase()} posts will be
-                    displayed here.
-                </p>
+                {loading && <p>Loading posts...</p>}
+                {error && <p className="text-red-500">Error: {error}</p>}
+
+                {!loading && !error && (
+                    <div className="bg-white shadow rounded-lg">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Title
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Category
+                                    </th>
+                                    <th className="relative px-6 py-3">
+                                        <span className="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {posts.length > 0 ? (
+                                    posts.map((post) => (
+                                        <tr key={post.ID}>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {post.title}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    {post.category}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <a
+                                                    href="#"
+                                                    className="text-indigo-600 hover:text-indigo-900 mr-4"
+                                                >
+                                                    Edit
+                                                </a>
+                                                <a
+                                                    href="#"
+                                                    className="text-red-600 hover:text-red-900"
+                                                >
+                                                    Thrash
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td
+                                            colSpan="3"
+                                            className="px-6 py-4 text-center text-gray-500"
+                                        >
+                                            No posts found in {activeTab}.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
         </div>
     );

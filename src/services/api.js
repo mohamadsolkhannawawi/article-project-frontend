@@ -1,22 +1,46 @@
 import axios from "axios";
 
-// Create an Axios instance with a base URL.
-// This means you don't have to type http://localhost:3000/api every time.
 const api = axios.create({
-    baseURL: "http://localhost:3000/api", // Your backend API URL
+    baseURL: "http://localhost:3000/api",
 });
+
+// THIS IS THE INTERCEPTOR
+// It runs before every request is sent
+api.interceptors.request.use(
+    (config) => {
+        // Get the token from local storage
+        const token = localStorage.getItem("token");
+        if (token) {
+            // If the token exists, add it to the Authorization header
+            config.headers["Authorization"] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 // Function to handle user login
 export const loginUser = async (email, password) => {
     try {
-        const response = await api.post("/login", {
-            email,
-            password,
-        });
-        // Return the full response so we can access data, headers, etc.
+        const response = await api.post("/login", { email, password });
         return response;
     } catch (error) {
-        // Axios wraps the error, so we throw the response data for easier handling
+        throw error.response.data;
+    }
+};
+
+// --- ADD THIS NEW FUNCTION ---
+// Function to get posts for the admin dashboard
+export const getAdminPosts = async (status) => {
+    try {
+        // We don't need to add the token here, the interceptor does it for us!
+        const response = await api.get("/admin/posts", {
+            params: { status }, // e.g., /api/admin/posts?status=publish
+        });
+        return response.data;
+    } catch (error) {
         throw error.response.data;
     }
 };
