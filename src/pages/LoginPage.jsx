@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
     // useState hooks to manage form inputs
@@ -9,6 +10,7 @@ function LoginPage() {
 
     // Get login function and loading state from our context
     const { login, loading } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -19,9 +21,8 @@ function LoginPage() {
         if (!result.success) {
             setError(result.error || "Invalid credentials. Please try again.");
         } else {
-            // On successful login, the AuthContext now holds the token.
-            // We will handle redirecting the user in the next step with routing.
-            console.log("Login successful! Token is stored.");
+            // Login successful, redirect to the dashboard
+            navigate("/", { replace: true });
         }
     };
 
