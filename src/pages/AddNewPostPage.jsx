@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { uploadImage, createPost } from "../services/api";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
 function AddNewPostPage() {
     const [title, setTitle] = useState("");
+
+    // 'content' state will now be managed by SimpleMDE
     const [content, setContent] = useState("");
     const [category, setCategory] = useState("");
+
     const [tags, setTags] = useState(""); // Simple comma-separated string for now
     const [imageFile, setImageFile] = useState(null);
 
@@ -17,6 +22,10 @@ function AddNewPostPage() {
 
     const handleFileChange = (e) => {
         setImageFile(e.target.files[0]);
+    };
+
+    const onContentChange = (value) => {
+        setContent(value);
     };
 
     const handleSubmit = async (status) => {
@@ -110,7 +119,7 @@ function AddNewPostPage() {
                     />
                 </div>
 
-                {/* Content (simple textarea for now) */}
+                {/* Content */}
                 <div className="mb-4">
                     <label
                         className="block text-gray-700 text-sm font-bold mb-2"
@@ -118,13 +127,11 @@ function AddNewPostPage() {
                     >
                         Content
                     </label>
-                    <textarea
+
+                    <SimpleMDE
                         id="content"
-                        rows="10"
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                        placeholder="Write your post content here (Markdown supported)..."
+                        onChange={onContentChange}
                     />
                 </div>
 
