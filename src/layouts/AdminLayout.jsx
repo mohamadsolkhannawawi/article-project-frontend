@@ -38,7 +38,7 @@ function AdminLayout() {
                     <div className="w-8 h-8 flex items-center justify-center bg-purple-600 rounded-md text-white text-xl font-bold">
                         ✦
                     </div>
-                    Admin
+                    Ruang Rasa
                 </NavLink>
 
                 {/* Navigation */}
@@ -52,7 +52,7 @@ function AdminLayout() {
                             >
                                 {" "}
                                 {/* Link to the new dashboard page */}
-                                <LayoutDashboard size={20} /> Dashboard
+                                <LayoutDashboard size={20} /> Publikasimu
                             </NavLink>
                         </li>
                         <li>
@@ -60,7 +60,7 @@ function AdminLayout() {
                                 to="/admin/posts"
                                 className={getNavLinkClass}
                             >
-                                <FileText size={20} /> Posts
+                                <FileText size={20} /> Ceritamu
                             </NavLink>
                         </li>
                         <li>
@@ -68,7 +68,7 @@ function AdminLayout() {
                                 to="/admin/users"
                                 className={getNavLinkClass}
                             >
-                                <Users size={20} /> Users
+                                <Users size={20} /> Tentangmu
                             </NavLink>
                         </li>
                         <li>
@@ -84,7 +84,7 @@ function AdminLayout() {
                                 to="/blog" // Link to the public blog page
                                 className={getNavLinkClass}
                             >
-                                <ArrowLeftFromLine size={20} /> View Blog
+                                <ArrowLeftFromLine size={20} /> Cerita Kita
                             </NavLink>
                         </li>
                     </ul>

@@ -41,13 +41,12 @@ function AdminDashboardPage() {
     return (
         <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <FileText size={28} className="text-purple-600" /> Published
-                Articles Overview
+                <FileText size={28} className="text-purple-600" /> Semua Publikasi Ceritamu
             </h1>
 
             {loading && (
                 <p className="text-gray-700">
-                    Loading your published articles...
+                    Memuat cerita yang kamu publish...
                 </p>
             )}
             {error && <p className="text-red-600">Error: {error}</p>}
@@ -62,7 +61,7 @@ function AdminDashboardPage() {
                         ) : (
                             <div className="col-span-full text-center py-12">
                                 <p className="text-gray-500">
-                                    You haven't published any articles yet.
+                                    Kamu belum mempublikasikan cerita apapun, mari mulai menulis, melalui kata, dengan rasa, dan bagikan maknanya.
                                 </p>
                             </div>
                         )}

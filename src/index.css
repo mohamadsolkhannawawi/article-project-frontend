@@ -78,14 +78,12 @@ html {
 }
 
 .auth-logo {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     margin: 0 auto 1.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
-    border-radius: 12px;
     color: white;
     font-size: 1.875rem;
     font-weight: bold;
@@ -263,4 +261,8 @@ html {
 .auth-link:hover {
     color: var(--kata-primary-dark);
     text-decoration: underline;
+}
+
+.post-card-gradient {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, rgba(79, 70, 229, 0.05) 100%);
 }

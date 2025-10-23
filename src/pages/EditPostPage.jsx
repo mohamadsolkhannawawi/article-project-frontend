@@ -104,12 +104,12 @@ function EditPostPage() {
 
     // Show loading skeleton while fetching
     if (loading && !title) {
-        return <div>Loading post data...</div>;
+        return <div>Memuat Detail Cerita...</div>;
     }
     // Use consistent styling for error messages
     return (
         <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Post</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Cerita Milikmu</h1>
 
             {error && (
                 <div
@@ -127,7 +127,7 @@ function EditPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="title"
                     >
-                        Title
+                        Judul Cerita
                     </label>
                     <input
                         id="title"
@@ -144,7 +144,7 @@ function EditPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="content"
                     >
-                        Content
+                        Isi Cerita
                     </label>
                     <SimpleMDE
                         id="content"
@@ -152,7 +152,7 @@ function EditPostPage() {
                         onChange={onContentChange}
                         options={{
                             // Add placeholder for better UX
-                            placeholder: "Write your post content here...",
+                            placeholder: "Tulis isi ceritamu di sini...",
                         }}
                     />
                 </div>
@@ -163,7 +163,7 @@ function EditPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="image"
                     >
-                        Featured Image
+                        Ilustrasi Cerita
                     </label>
                     <input
                         id="image"
@@ -187,7 +187,7 @@ function EditPostPage() {
                 </div>
                 {uploading && (
                     <p className="text-blue-500 text-sm mb-4">
-                        Uploading new image...
+                        Memuat ilustrasi baru...
                     </p>
                 )}
 
@@ -197,7 +197,7 @@ function EditPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="category"
                     >
-                        Category
+                        Kategori Cerita
                     </label>
                     <input
                         id="category"
@@ -214,7 +214,7 @@ function EditPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="tags"
                     >
-                        Tags (comma-separated)
+                        Tags (pisahkan dengan koma)
                     </label>
                     <input
                         id="tags"
@@ -233,7 +233,7 @@ function EditPostPage() {
                         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Upload size={18} />{" "}
-                        {loading ? "Updating..." : "Update & Publish"}
+                        {loading ? "Memuat & Publikasikan..." : "Update & Publish"}
                     </button>
                     <button
                         onClick={() => handleSubmit("draft")}
@@ -241,7 +241,7 @@ function EditPostPage() {
                         className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Save size={18} />{" "}
-                        {loading ? "Updating..." : "Update Draft"}
+                        {loading ? "Memuat..." : "Draf Cerita"}
                     </button>
                 </div>
             </div>

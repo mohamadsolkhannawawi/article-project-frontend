@@ -10,7 +10,7 @@ import {
 
 function Footer() {
     return (
-        <footer className="bg-gray-50 border-t border-gray-200 text-gray-600 py-12 mt-16">
+        <footer className="bg-gradient-to-b from-purple-50 to-purple-100 border-t border-purple-200 text-gray-600 py-12 mt-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Brand Info */}
                 <div className="col-span-1">
@@ -18,8 +18,8 @@ function Footer() {
                         KataGenzi
                     </h3>
                     <p className="text-gray-600 text-sm">
-                        A clean, minimalist platform for thoughtful articles
-                        from our community. Write, share, connect.
+                        Ruang sunyi yang bercerita, tempat setiap kata menemukan
+                        maknanya.
                     </p>
                 </div>
 
@@ -86,7 +86,16 @@ function Footer() {
 
             {/* Copyright */}
             <div className="border-t border-gray-200 mt-10 pt-8 text-center text-gray-500 text-sm">
-                © 2025 KataGenzi. All rights reserved.
+                © 2025{" "}
+                <a
+                    href="https://www.linkedin.com/in/mohamadsolkhannawawi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "var(--kata-primary)" }}
+                >
+                    KataGenzi
+                </a>
+                . All rights reserved.
             </div>
         </footer>
     );

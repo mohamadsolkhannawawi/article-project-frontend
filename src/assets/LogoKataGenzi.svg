@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" role="img" aria-labelledby="title">
+  <title id="title">Bintang Ungu</title>
+  <!-- Kotak ungu dengan sudut melengkung -->
+  <rect x="4" y="4" width="32" height="32" rx="6" fill="#7c3aed"></rect>
+  <!-- Simbol bintang ✦ di tengah -->
+  <text x="20" y="22" text-anchor="middle" dominant-baseline="middle" font-size="20" font-weight="700" fill="#ffffff" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">✦</text>
+</svg>

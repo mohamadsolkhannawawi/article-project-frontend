@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { uploadImage, createPost } from "../services/api";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
-import { Plus, Save } from "lucide-react";
+import { Share, Save } from "lucide-react";
 
 function AddNewPostPage() {
     const [title, setTitle] = useState("");
@@ -91,7 +91,7 @@ function AddNewPostPage() {
     return (
         <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-6">
-                Add New Post
+                Tulis Cerita, Lewat Kata, dan Bagikan Maknanya
             </h1>
 
             {error && (
@@ -110,7 +110,7 @@ function AddNewPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="title"
                     >
-                        Title
+                        Judul Cerita
                     </label>
                     <input
                         id="title"
@@ -128,7 +128,7 @@ function AddNewPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="content"
                     >
-                        Content
+                        Isi Cerita
                     </label>
                     <SimpleMDE
                         id="content"
@@ -147,7 +147,7 @@ function AddNewPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="image"
                     >
-                        Featured Image
+                        Ilustrasi Cerita
                     </label>
                     <input
                         id="image"
@@ -163,7 +163,7 @@ function AddNewPostPage() {
                 </div>
                 {uploading && (
                     <p className="text-blue-500 text-sm mb-4">
-                        Uploading image...
+                        Mengunggah Ilustrasi...
                     </p>
                 )}
 
@@ -173,7 +173,7 @@ function AddNewPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="category"
                     >
-                        Category
+                        Kategori Cerita
                     </label>
                     <input
                         id="category"
@@ -191,7 +191,7 @@ function AddNewPostPage() {
                         className="block text-gray-700 text-sm font-medium mb-1"
                         htmlFor="tags"
                     >
-                        Tags (comma-separated)
+                        Tags Cerita (pisahkan dengan koma)
                     </label>
                     <input
                         id="tags"
@@ -210,8 +210,8 @@ function AddNewPostPage() {
                         disabled={loading || uploading}
                         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <Plus size={18} />{" "}
-                        {loading ? "Publishing..." : "Publish Post"}
+                        <Share size={18} />{" "}
+                        {loading ? "Mengunggah Cerita..." : "Bagikan Makna"}
                     </button>
                     <button
                         onClick={() => handleSubmit("draft")}
@@ -219,7 +219,7 @@ function AddNewPostPage() {
                         className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <Save size={18} />{" "}
-                        {loading ? "Saving..." : "Save as Draft"}
+                        {loading ? "Simpan Cerita..." : "Draft Cerita"}
                     </button>
                 </div>
             </div>

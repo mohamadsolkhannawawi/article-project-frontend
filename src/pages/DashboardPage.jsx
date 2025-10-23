@@ -6,8 +6,8 @@ function DashboardPage() {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-            <p className="mb-6">Welcome! You are successfully logged in.</p>
+            <h1 className="text-3xl font-bold mb-4">Ruang Rasa</h1>
+            <p className="mb-6">Selamat datang di Ruang Rasa!</p>
             <button
                 onClick={logout} // Add logout functionality
                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

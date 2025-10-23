@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getMyAllPosts, deletePost } from "../services/api"; // <-- IMPORT getMyAllPosts for user's posts
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
-import { Plus, Edit, Trash2 } from "lucide-react"; // Import Lucide icons
+import { PencilLine, Edit, Trash2 } from "lucide-react"; // Import Lucide icons
 
 const TABS = ["Published", "Draft", "Trashed"];
 const LIMIT = 10;
@@ -98,13 +98,13 @@ function AllPostsPage() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-900">All Posts</h1>
+                <h1 className="text-3xl font-bold text-gray-900">Semua Cerita Milikmu</h1>
                 <Link
                     to="/admin/posts/new"
                     className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors duration-200"
                 >
-                    Add New
-                    <Plus size={18} />
+                    <PencilLine size={18} />
+                    Tulis Cerita
                 </Link>
             </div>
 
@@ -129,7 +129,7 @@ function AllPostsPage() {
 
             {/* Content for the active tab */}
             <div>
-                {loading && <p className="text-gray-700">Loading posts...</p>}
+                {loading && <p className="text-gray-700">Memuat Cerita Milikmu...</p>}
                 {error && <p className="text-red-500">Error: {error}</p>}
 
                 {!loading && !error && (
@@ -138,13 +138,13 @@ function AllPostsPage() {
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Title
+                                        Judul Cerita
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Category
+                                        Kategori Cerita
                                     </th>
                                     <th className="relative px-6 py-3">
-                                        <span className="sr-only">Actions</span>
+                                        <span className="sr-only">Aksi</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -184,7 +184,7 @@ function AllPostsPage() {
                                                         className="text-red-600 hover:text-red-800 inline-flex items-center gap-1"
                                                     >
                                                         <Trash2 size={16} />{" "}
-                                                        Thrash
+                                                        Trash
                                                     </button>
                                                 )}
                                             </td>
@@ -196,7 +196,7 @@ function AllPostsPage() {
                                             colSpan="3"
                                             className="px-6 py-4 text-center text-gray-500"
                                         >
-                                            No posts found in {activeTab}.
+                                            Belum ada cerita untuk ditampilkan di tab {activeTab}.
                                         </td>
                                     </tr>
                                 )}

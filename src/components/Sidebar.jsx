@@ -8,7 +8,7 @@ function Sidebar({ latest, categories, tags }) {
             {/* Latest Posts */}
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Clock size={20} className="text-purple-600" /> Latest Posts
+                    <Clock size={20} className="text-purple-600" /> Cerita Terbaru
                 </h3>
                 <ul className="space-y-3">
                     {latest.length > 0 ? (
@@ -23,7 +23,7 @@ function Sidebar({ latest, categories, tags }) {
                             </li>
                         ))
                     ) : (
-                        <p className="text-gray-500 text-sm">No latest posts.</p>
+                        <p className="text-gray-500 text-sm">Tidak ada cerita terbaru.</p>
                     )}
                 </ul>
             </div>
@@ -31,7 +31,7 @@ function Sidebar({ latest, categories, tags }) {
             {/* Categories (Placeholder) */}
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Folder size={20} className="text-purple-600" /> Categories
+                    <Folder size={20} className="text-purple-600" /> Kategori Cerita
                 </h3>
                 <ul className="space-y-2">
                     {categories.length > 0 ? (
@@ -46,7 +46,7 @@ function Sidebar({ latest, categories, tags }) {
                             </li>
                         ))
                     ) : (
-                        <p className="text-gray-500 text-sm">No categories yet.</p>
+                        <p className="text-gray-500 text-sm">Tidak ada kategori.</p>
                     )}
                 </ul>
             </div>
@@ -68,7 +68,7 @@ function Sidebar({ latest, categories, tags }) {
                             </Link>
                         ))
                     ) : (
-                        <p className="text-gray-500 text-sm">No tags yet.</p>
+                        <p className="text-gray-500 text-sm">Tidak ada tag.</p>
                     )}
                 </div>
             </div>

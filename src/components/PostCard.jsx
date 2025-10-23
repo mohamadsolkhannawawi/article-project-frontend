@@ -13,7 +13,7 @@ const formatDate = (isoString) => {
 
 function PostCard({ post }) {
     return (
-        <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden post-card-gradient">
             {" "}
             {/* Consistent styling */}
             <Link to={`/blog/${post.ID}`}>
@@ -52,7 +52,7 @@ function PostCard({ post }) {
                     to={`/blog/${post.ID}`}
                     className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium transition-colors duration-200"
                 >
-                    Read More <ArrowRight size={16} className="ml-1" />
+                    Temukan Makna <ArrowRight size={16} className="ml-1" />
                 </Link>
             </div>
         </div>

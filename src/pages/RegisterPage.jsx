@@ -1,10 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { registerUser } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff, ArrowRight, Lock, AlertCircle } from "lucide-react";
+import {
+    Eye,
+    EyeOff,
+    ArrowRight,
+    Lock,
+    AlertCircle,
+    CircleAlert,
+} from "lucide-react";
+import Logo from "../assets/LogoKataGenzi.svg";
 
 function RegisterPage() {
+    const fullNameRef = useRef(null);
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
+    const passwordConfirmRef = useRef(null);
+
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,38 +31,41 @@ function RegisterPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const validatePassword = () => {
-        const errors = [];
-        if (password.length < 12) {
-            errors.push("at least 12 characters");
-        }
-        if (!/[a-z]/.test(password)) {
-            errors.push("one lowercase letter");
-        }
-        if (!/[A-Z]/.test(password)) {
-            errors.push("one uppercase letter");
-        }
-        if (!/\d/.test(password)) {
-            errors.push("one number");
-        }
-        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-            errors.push("one special character");
-        }
-        if (fullName && password.toLowerCase().includes(fullName.toLowerCase())) {
-            errors.push("should not contain your full name");
-        }
-        if (email) {
-            const emailUsername = email.split('@')[0];
-            if (emailUsername && password.toLowerCase().includes(emailUsername.toLowerCase())) {
-                errors.push("should not contain part of your email");
-            }
-        }
-        setPasswordErrors(errors);
-    };
-
     useEffect(() => {
+        // Validate password only when there are changes
         if (password || email || fullName) {
-            validatePassword();
+            const errors = [];
+            if (password.length < 12) {
+                errors.push("at least 12 characters");
+            }
+            if (!/[a-z]/.test(password)) {
+                errors.push("one lowercase letter");
+            }
+            if (!/[A-Z]/.test(password)) {
+                errors.push("one uppercase letter");
+            }
+            if (!/\d/.test(password)) {
+                errors.push("one number");
+            }
+            if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+                errors.push("one special character");
+            }
+            if (
+                fullName &&
+                password.toLowerCase().includes(fullName.toLowerCase())
+            ) {
+                errors.push("should not contain your full name");
+            }
+            if (email) {
+                const emailUsername = email.split("@")[0];
+                if (
+                    emailUsername &&
+                    password.toLowerCase().includes(emailUsername.toLowerCase())
+                ) {
+                    errors.push("should not contain part of your email");
+                }
+            }
+            setPasswordErrors(errors);
         }
     }, [password, email, fullName]);
 
@@ -60,18 +76,66 @@ function RegisterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
+        setError(""); // Reset error state
+        console.log("[RegisterPage] Form submitted - Checking validation...");
 
-        // Validate passwords match
-        if (!passwordsMatch || isPasswordInvalid) {
+        // 1. Validate Sequentially: Full Name (first field)
+        if (!fullName.trim()) {
+            console.log("[RegisterPage] fullName is empty, focusing...");
+            setError("Isi semua, agar kita bisa berbagi rasa!");
+            fullNameRef.current?.focus();
             return;
         }
 
+        // 2. Validate Sequentially: Email (second field)
+        if (!email.trim()) {
+            console.log("[RegisterPage] email is empty, focusing...");
+            setError("Email Address is required.");
+            emailRef.current?.focus();
+            return;
+        }
+
+        // 3. Validate Sequentially: Password (third field)
+        if (!password.trim()) {
+            console.log("[RegisterPage] password is empty, focusing...");
+            setError("Password is required.");
+            passwordRef.current?.focus();
+            return;
+        }
+
+        // 4. Validate Sequentially: Password Confirmation (fourth field)
+        if (!passwordConfirm.trim()) {
+            console.log("[RegisterPage] passwordConfirm is empty, focusing...");
+            setError("Password Confirmation is required.");
+            passwordConfirmRef.current?.focus();
+            return;
+        }
+
+        // 5. Validate Password Complexity
+        if (isPasswordInvalid) {
+            console.log("[RegisterPage] Password complexity check failed");
+            setError(
+                "Your password does not meet all the complexity requirements."
+            );
+            passwordRef.current?.focus();
+            return;
+        }
+
+        // 6. Validate Password Confirmation
+        if (hasPasswordError) {
+            console.log("[RegisterPage] Passwords do not match");
+            setError("Password and Password Confirmation do not match.");
+            passwordConfirmRef.current?.focus();
+            return;
+        }
+
+        // All validations successful, proceed to register
+        console.log(
+            "[RegisterPage] All validations passed, proceeding with registration..."
+        );
         setLoading(true);
         try {
-            // registerUser is expected to exist in api.js and return data
             await registerUser(fullName, email, password);
-            // Immediately log the user in
             const res = await login(email, password);
             if (res.success) {
                 navigate("/admin", { replace: true });
@@ -90,10 +154,15 @@ function RegisterPage() {
             <div className="auth-card">
                 {/* Header with Logo */}
                 <div className="auth-header">
-                    <div className="auth-logo">✦</div>
+                    <img
+                        src={Logo}
+                        alt="KataGenzi Logo"
+                        className="auth-logo"
+                    />
                     <h1 className="auth-title">Sign Up For Free</h1>
                     <p className="auth-subtitle">
-                        Join us for less than 1 minute, with no cost.
+                        Temukan maknanya, dalam setiap kata, <br /> Daftar
+                        sekarang juga!
                     </p>
                 </div>
 
@@ -107,11 +176,12 @@ function RegisterPage() {
                         <input
                             id="fullName"
                             type="text"
+                            ref={fullNameRef}
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
                             className="form-input"
-                            placeholder="Enter your full name..."
-                            required
+                            placeholder="Enter your full name"
+                            // required
                         />
                     </div>
 
@@ -123,11 +193,12 @@ function RegisterPage() {
                         <input
                             id="email"
                             type="email"
+                            ref={emailRef}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="form-input"
-                            placeholder="Enter your email..."
-                            required
+                            placeholder="Enter your email"
+                            // required
                         />
                     </div>
 
@@ -140,11 +211,12 @@ function RegisterPage() {
                             <input
                                 id="password"
                                 type={showPassword ? "text" : "password"}
+                                ref={passwordRef}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="form-input w-full"
                                 placeholder="••••••••••"
-                                required
+                                // required
                             />
                             <button
                                 type="button"
@@ -160,8 +232,16 @@ function RegisterPage() {
                         </div>
                         {password && isPasswordInvalid && (
                             <div className="error-message">
-                                <span className="error-icon">⚠️</span>
-                                <span>Password must contain: {passwordErrors.join(", ")}</span>
+                                <span className="error-icon">
+                                    <CircleAlert
+                                        size={18}
+                                        className="text-red-500"
+                                    />
+                                </span>
+                                <span>
+                                    Password must contain:{" "}
+                                    {passwordErrors.join(", ")}
+                                </span>
                             </div>
                         )}
                     </div>
@@ -175,6 +255,7 @@ function RegisterPage() {
                             <input
                                 id="passwordConfirm"
                                 type={showPasswordConfirm ? "text" : "password"}
+                                ref={passwordConfirmRef}
                                 value={passwordConfirm}
                                 onChange={(e) =>
                                     setPasswordConfirm(e.target.value)
@@ -183,37 +264,35 @@ function RegisterPage() {
                                     hasPasswordError ? "border-red-500" : ""
                                 }`}
                                 placeholder="••••••••••"
-                                required
+                                // required
                             />
                             <div className="form-input-icon">
-                                {hasPasswordError ? (
-                                    <AlertCircle
-                                        size={18}
-                                        className="text-red-500"
-                                    />
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setShowPasswordConfirm(
-                                                !showPasswordConfirm
-                                            )
-                                        }
-                                    >
-                                        {showPasswordConfirm ? (
-                                            <EyeOff size={18} />
-                                        ) : (
-                                            <Eye size={18} />
-                                        )}
-                                    </button>
-                                )}
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowPasswordConfirm(
+                                            !showPasswordConfirm
+                                        )
+                                    }
+                                >
+                                    {showPasswordConfirm ? (
+                                        <EyeOff size={18} />
+                                    ) : (
+                                        <Eye size={18} />
+                                    )}
+                                </button>
                             </div>
                         </div>
 
                         {/* Password Error */}
                         {hasPasswordError && (
                             <div className="error-message">
-                                <span className="error-icon">⚠️</span>
+                                <span className="error-icon">
+                                    <CircleAlert
+                                        size={18}
+                                        className="text-red-500"
+                                    />
+                                </span>
                                 <span>ERROR: Password do not match!</span>
                             </div>
                         )}
@@ -222,7 +301,12 @@ function RegisterPage() {
                     {/* General Error Message */}
                     {error && (
                         <div className="error-message">
-                            <span className="error-icon">⚠️</span>
+                            <span className="error-icon">
+                                <CircleAlert
+                                    size={18}
+                                    className="text-red-500"
+                                />
+                            </span>
                             <span>{error}</span>
                         </div>
                     )}
@@ -230,7 +314,7 @@ function RegisterPage() {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        disabled={loading || hasPasswordError || isPasswordInvalid}
+                        disabled={loading}
                         className="btn-primary"
                     >
                         {loading ? "Creating..." : "Sign Up"}

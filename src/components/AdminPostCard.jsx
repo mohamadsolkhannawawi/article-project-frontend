@@ -13,7 +13,7 @@ const formatDate = (isoString) => {
 
 function AdminPostCard({ post }) {
     return (
-        <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col">
+        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col post-card-gradient">
             <Link to={`/admin/posts/edit/${post.ID}`}>
                 <img
                     src={

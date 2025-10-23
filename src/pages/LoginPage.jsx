@@ -8,7 +8,9 @@ import {
     Facebook,
     Mail,
     Instagram,
+    CircleAlert,
 } from "lucide-react";
+import Logo from "../assets/LogoKataGenzi.svg";
 
 function LoginPage() {
     // useState hooks to manage form inputs
@@ -28,7 +30,9 @@ function LoginPage() {
         const result = await login(email, password);
 
         if (!result.success) {
-            setError(result.error || "Invalid credentials. Please try again.");
+            setError(
+                "Email atau sandimu salah, atau rasamu yang berubah? Coba Lagi ya!"
+            );
         } else {
             // Login successful, redirect to the dashboard
             navigate("/admin", { replace: true });
@@ -40,10 +44,14 @@ function LoginPage() {
             <div className="auth-card">
                 {/* Header with Logo */}
                 <div className="auth-header">
-                    <div className="auth-logo">✦</div>
+                    <img
+                        src={Logo}
+                        alt="KataGenzi Logo"
+                        className="auth-logo"
+                    />
                     <h1 className="auth-title">Let's Sign In</h1>
                     <p className="auth-subtitle">
-                        Experience KataGenzi for everyone.
+                        Temukan maknanya, dalam setiap kata
                     </p>
                 </div>
 
@@ -60,7 +68,7 @@ function LoginPage() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="form-input"
-                            placeholder="Enter your email..."
+                            placeholder="Enter your email"
                             required
                         />
                     </div>
@@ -77,7 +85,7 @@ function LoginPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="form-input w-full"
-                                placeholder="Enter your password..."
+                                placeholder="Enter your password"
                                 required
                             />
                             <button
@@ -97,7 +105,12 @@ function LoginPage() {
                     {/* Error Message */}
                     {error && (
                         <div className="error-message">
-                            <span className="error-icon">⚠️</span>
+                            <span className="error-icon">
+                                <CircleAlert
+                                    size={18}
+                                    className="text-red-500"
+                                />
+                            </span>
                             <span>{error}</span>
                         </div>
                     )}
