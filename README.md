@@ -1,16 +1,59 @@
-# React + Vite 
+# Article Project Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Description
 
-Currently, two official plugins are available:
+This is the frontend for the Article Project, a modern platform for creating and managing articles. It provides a complete user experience for reading articles and a management panel for administrators to write, edit, and manage content.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## React Compiler
+- **Framework:** React (Vite)
+- **Language:** JavaScript (JSX)
+- **Styling:** Tailwind CSS
+- **API Communication:** Axios
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project Structure
 
-## Expanding the ESLint configuration
+```
+frontend/
+├── public/               # Public assets not processed by Vite
+└── src/
+    ├── assets/           # Static assets like images and SVGs
+    ├── components/       # Reusable UI components (e.g., Navbar, PostCard)
+    ├── context/          # Global state management (e.g., AuthContext)
+    ├── layouts/          # Page layout components (Admin, Public)
+    ├── pages/            # Components for each application page (e.g., Home, Login, Dashboard)
+    ├── routes/           # Routing configuration (e.g., ProtectedRoute)
+    ├── services/         # API communication layer (e.g., api.js)
+    ├── App.jsx           # Main application component and routing setup
+    ├── main.jsx          # Entry point for the React application
+    └── index.css         # Global CSS styles
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Installation and Setup Guide
+
+### 1. Prerequisites
+Ensure the following software is installed on your machine:
+- Node.js & NPM
+
+### 2. Initial Setup
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/mohamadsolkhannawawi/article-project-frontend.git
+   ```
+2. Navigate into the project directory:
+   ```bash
+   cd article-project-frontend
+   ```
+
+### 3. Frontend Configuration
+1. Install JavaScript dependencies:
+   ```bash
+   npm install
+   ```
+2. Run the frontend development server:
+   ```bash
+   npm run dev
+   ```
+
+### 4. Accessing the Application
+- Open your browser and navigate to the URL provided by Vite (usually `http://localhost:5173`).
