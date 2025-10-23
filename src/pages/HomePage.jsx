@@ -40,7 +40,7 @@ function HomePage() {
     return (
         <div>
             {/* Hero Section - KataGenzi Brand Identity (Full-width, soft gradient) */}
-            <div className="mb-16 overflow-hidden">
+            <div className="overflow-hidden">
                 {" "}
                 {/* The gradient now fades to transparent, blending into the gray background from PublicLayout */}
                 <div className="relative bg-gradient-to-b from-purple-100 via-purple-50 to-transparent text-gray-900 pt-48 pb-32 px-6 md:px-12">
@@ -66,10 +66,10 @@ function HomePage() {
             </div>
 
             {/* This div now only provides vertical spacing, background comes from PublicLayout */}
-            <div className="py-16">
+            <div className="py-6">
                 <h2
                     id="articles"
-                    className="text-3xl font-bold mb-8 scroll-mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+                    className="text-3xl font-bold mb-8 scroll-mt-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
                 >
                     All Articles
                 </h2>
